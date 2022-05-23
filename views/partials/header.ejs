@@ -1,0 +1,29 @@
+<script type="module" src="main.js"></script>
+<script>
+  $(window).on("load",()=>{
+    if(localSession.getItem('token')){
+      $('#download').show();
+      $('#authorize').hide();
+      $('#logoff').show();
+    } else {
+      $('#download').hide();
+      $('#authorize').show();
+      $('#logoff').hide();
+    }
+  });
+</script>
+<style>
+  header {
+    background-color: #666;
+    padding: 30px;
+    text-align: center;
+    font-size: 35px;
+    color: white;
+  }
+</style>
+
+<header>
+  <button id="download" onclick="download()">Download</button>
+  <button id="authorize" onclick="authorize()">Authorize</button>
+  <button id="logoff" onclick="logoff()">Logoff</button>
+</header>

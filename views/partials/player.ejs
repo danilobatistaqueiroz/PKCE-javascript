@@ -1,0 +1,37 @@
+<script>
+    remove = async () => {
+      let keys = await localforage.keys()
+      keys.filter(k => k.indexOf('1-1000')>-1).forEach(k => localforage.removeItem(k))
+    }
+    async function play() {
+      let arrayBufferView = new Uint8Array(await localforage.getItem('1-1000/thesaurus/1-1000-thesaurus-tough.mp3')).buffer;
+      let blob2 = new Blob( [ arrayBufferView ], { type: 'music/mp3' } )
+      let howlSource = URL.createObjectURL(blob2)
+      const sound = new Howl({
+        src: [howlSource],
+        preload: true,
+        format: ['ogg'],
+        onloaderror: (id, msg) => console.error(id, msg),
+        onplayerror: (id, msg) => console.error(id, msg),
+        onend: () => { console.log('played'); }
+      });
+      sound.play();
+    }
+    $(window).on("load",()=>{
+      if(localSession.getItem('token')){
+        $('#play').show();
+        $('#remove').show();
+      } else {
+        $('#play').hide();
+        $('#remove').hide();
+      }
+    });
+</script>
+<style>
+  article{
+    margin-top:3em;
+    margin-left:3em;
+  }
+</style>
+<button id="play" onclick="play()">Play</button>
+<button id="remove" onclick="remove()">Remove</button>
