@@ -7,22 +7,19 @@ window.localforage = localforage
 //## https://blog.ropnop.com/storing-tokens-in-browser/ ##//
 
 function authorize(){
-  let width = 646;
-  let height = 756;
-  let left = (screen.width/2)-(width/2);
-  let top = (screen.height/2)-(height/2);
-  let myWindow = window.open("/authorization", "", `toolbar=no,location=no,menubar=no,titlebar=no,width=${width},height=${height},top=${top},left=${left}`);
+  window.location.href = '/authorization'
 }
 
 function logoff(){
-  localSession.removeItem('codeVerifier');
-  localSession.removeItem('codeChallenge');
-  localSession.removeItem('csrfToken');
-  localSession.removeItem('token');
+  sessionStorage.removeItem('codeVerifier');
+  sessionStorage.removeItem('codeChallenge');
+  sessionStorage.removeItem('csrfToken');
+  sessionStorage.removeItem('token');
+  document.location.reload();
 }
 
 function starter(){
-  if(localSession.getItem('codeVerifier')){
+  if(sessionStorage.getItem('codeVerifier')){
     let ini = window.location.href.indexOf('?code=');
     let end = window.location.href.indexOf('&',ini);
     let authCode = window.location.href.substring(ini+'?code='.length,end);
@@ -30,12 +27,12 @@ function starter(){
       client_id: 'ny4213rwak4bfv9',
       grant_type: 'authorization_code',
       code: authCode,
-      code_verifier: localSession.getItem('codeVerifier'),
+      code_verifier: sessionStorage.getItem('codeVerifier'),
       redirect_uri: 'http://localhost:3000'
     }
-    localSession.removeItem('codeVerifier')
-    localSession.removeItem('codeChallenge')
-    localSession.removeItem('csrfToken')
+    sessionStorage.removeItem('codeVerifier')
+    sessionStorage.removeItem('codeChallenge')
+    sessionStorage.removeItem('csrfToken')
     $.ajax({
       type: "POST",
       url: `https://api.dropbox.com/oauth2/token`,
@@ -44,8 +41,8 @@ function starter(){
       dataType: 'json'
     });
     function fnreturn(data,status,jq){
-      localSession.setItem('token',data.access_token);
-      window.close();
+      sessionStorage.setItem('token',data.access_token);
+      document.location.reload();
     }
   }
 }
@@ -69,7 +66,7 @@ function download(){
   http.setRequestHeader('Content-type', 'application/octet-stream; charset=utf-8');
   http.setRequestHeader('Dropbox-API-Arg', '{"path":"/1-1000.zip"}');
   http.setRequestHeader('Accept', 'application/zip');
-  http.setRequestHeader('Authorization', `Bearer ${localSession.getItem('token')}`);
+  http.setRequestHeader('Authorization', `Bearer ${sessionStorage.getItem('token')}`);
   http.responseType = "arraybuffer";
   http.onload = function(oEvent) {
     let arrayBuffer = http.response;

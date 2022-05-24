@@ -1,29 +1,49 @@
 <script type="module" src="main.js"></script>
 <script>
   $(window).on("load",()=>{
-    if(localSession.getItem('token')){
-      $('#download').show();
+    if(sessionStorage.getItem('token')){
       $('#authorize').hide();
       $('#logoff').show();
     } else {
-      $('#download').hide();
       $('#authorize').show();
       $('#logoff').hide();
     }
+    localforage.keys().then(keys => {
+      let found = keys.find(k => k.indexOf('1-1000')>-1);
+      if(found){
+        $('#download').hide();
+      } else {
+        $('#download').show();
+      }
+    });
   });
 </script>
 <style>
   header {
     background-color: #666;
-    padding: 30px;
+    padding: 5px;
+    height: 50px;
     text-align: center;
-    font-size: 35px;
+    font-size: 15px;
     color: white;
+  }
+  #logoff{
+    float:right
+  }
+  #logo{
+    float:left
   }
 </style>
 
 <header>
-  <button id="download" onclick="download()">Download</button>
-  <button id="authorize" onclick="authorize()">Authorize</button>
-  <button id="logoff" onclick="logoff()">Logoff</button>
+  <div class="dropdown">
+    <button id="download" onclick="download()" class="btn btn-primary"><ion-icon name="cloud-download-outline"></ion-icon></button>
+    <button id="authorize" onclick="authorize()" class="btn btn-primary"><ion-icon name="logo-dropbox"></ion-icon>Logar no Dropbox</button>
+      <button id="logoff" class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false"><ion-icon name="person-circle-outline"></ion-icon></button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li><a class="dropdown-item" href="#">Cadastro</a></li>
+        <li><a class="dropdown-item" href="#">Preferencias</a></li>
+        <li><a class="dropdown-item" onclick="logoff()">Logoff</a></li>
+      </ul>
+  </div>
 </header>

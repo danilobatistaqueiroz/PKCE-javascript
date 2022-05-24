@@ -18,7 +18,7 @@
       sound.play();
     }
     $(window).on("load",()=>{
-      if(localSession.getItem('token')){
+      if(sessionStorage.getItem('token')){
         $('#play').show();
         $('#remove').show();
       } else {
@@ -33,5 +33,5 @@
     margin-left:3em;
   }
 </style>
-<button id="play" onclick="play()">Play</button>
-<button id="remove" onclick="remove()">Remove</button>
+<button id="play" onclick="play()" class="btn btn-primary"><ion-icon name="play-outline"></ion-icon></button>
+<button id="remove" onclick="remove()" class="btn btn-danger"><ion-icon name="trash-outline"></ion-icon></button>

@@ -40,21 +40,21 @@ function generateCodeVerifier() {
 async function load(){
   let codeVerifier = generateCodeVerifier();
   let codeChallenge = await generateCodeChallengeFromVerifier(codeVerifier);
-  localSession.setItem('codeVerifier',codeVerifier);
-  localSession.setItem('codeChallenge',codeChallenge);
-  localSession.setItem('csrfToken',uuidv4());
+  sessionStorage.setItem('codeVerifier',codeVerifier);
+  sessionStorage.setItem('codeChallenge',codeChallenge);
+  sessionStorage.setItem('csrfToken',uuidv4());
   let opt = {
     client_id: 'ny4213rwak4bfv9',
     response_type: 'code',
-    code_challenge: localSession.getItem('codeChallenge'),
+    code_challenge: sessionStorage.getItem('codeChallenge'),
     code_challenge_method: 'S256',
     redirect_uri: 'http://localhost:3000',
-    state: localSession.getItem('csrfToken')
+    state: sessionStorage.getItem('csrfToken')
   }
   let query = new URLSearchParams(opt)
   window.location.href = `https://www.dropbox.com/oauth2/authorize?${query}`
 }
-if(!localSession.getItem('token')){
+if(!sessionStorage.getItem('token')){
   load();
 }
 
